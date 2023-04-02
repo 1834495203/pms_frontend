@@ -50,14 +50,25 @@ export interface allUser {
 
 //投诉信息
 export interface complaint {
-    pubilsherId: string,
+    cid?: string,
+    pubilsherId: number,
     content?: string,
     state?: string,
-    createDate?: Date,
+    createTime?: Date,
     process?: string,
+    profiles?: string, 
     profile?: string, 
     solverId?: string,
     title: string
+}
+
+//图片信息
+export interface pict {
+    pid?:number,
+    name?:string,
+    object_name?:string,
+    type?:string,
+    profile_id?:number
 }
 
 
