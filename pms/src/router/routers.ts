@@ -30,7 +30,17 @@ const routes = [
                 name:'postCom',
                 path:'postCom',
                 component:()=>import('../pages/complaint/PostComplaint.vue'),
-            }
+            },
+            {
+                name:'result',
+                path:'result',
+                component:()=>import('../pages/Result.vue'),
+            },
+            {
+                name:'queryCom',
+                path:'queryCom',
+                component:()=>import('../pages/complaint/QueryComplaint.vue'),
+            },
         ]
     }
 ]

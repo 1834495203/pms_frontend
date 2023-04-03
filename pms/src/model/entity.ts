@@ -71,6 +71,39 @@ export interface pict {
     profile_id?:number
 }
 
+//投诉查询信息
+export interface queryComplaintDto{
+    pubilsherId: number,
+    state?: string,
+    title?: string,
+    createTime?: Date,
+    queryTime?:number,
+    createDate?:Date
+}
+
+//获取投诉信息
+export interface resultComplaintDto{
+    cid?: string,
+    pubilsherId?: number,
+    content?: string,
+    state?: string,
+    createTime?: Date,
+    process?: string,
+    profiles?: string, 
+    profile?: string, 
+    solverId?: string,
+    title?: string,
+    objectName?: string[]
+}
+
+//分页查询结果
+export interface PageResult<T>{
+    items?:Array<T>,
+    counts?:number,
+    page?:number,
+    pageSize?:number
+}
+
 
 const floor = [
     {value: 'Floor1',label: '一楼'},

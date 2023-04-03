@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { ElMessage, ElNotification as notify, UploadInstance, UploadUserFile, UploadFile, UploadFiles } from 'element-plus'
+import { ElMessage, ElNotification as notify, UploadInstance, UploadUserFile, UploadFile, UploadFiles, ElLoading } from 'element-plus'
 import axios from '../../api/request'
 import { onMounted, ref } from 'vue'
-import { Proprietor, complaint, pict, userInfo} from '../../model/entity'
-import { IceCreamRound, Plus } from '@element-plus/icons-vue'
+import { allUser, complaint, pict, userInfo} from '../../model/entity'
+import { Plus } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import useCookie from 'vue-cookies'
 import jwt from 'jwt-decode'
+import pageHeader from '../components/pageHeader.vue'
  
 //arr存储待写入数据库的图片信息id
 const arr = ref<Map<string, number>>(new Map<string, number>())
@@ -21,7 +22,7 @@ const complaint = ref<complaint>({
     title: ''
 })
 const router = useRouter()
-const user = ref<Proprietor>()
+const user = ref<allUser>()
 const src = ref('')
 const anonymous = ref(false)
 
@@ -35,9 +36,8 @@ onMounted(()=>{
     })
 })
 
-const onBack = async () => {
-    notify('Back')
-    router.back()
+const isAnonymous = (val:boolean)=>{
+    anonymous.value = val
 }
 
 const toExceed = (files: File[], uploadFiles: UploadUserFile[])=>{
@@ -63,6 +63,12 @@ const pictRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles)=>{
 }
 
 const toSubmit = ()=>{
+    //加载动画
+    const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+    })
     const user:userInfo = jwt(cookie.get('user'))
     let obj = Object.create(null)
     for(let[k,v] of arr.value){
@@ -70,45 +76,33 @@ const toSubmit = ()=>{
     }
     complaint.value.profiles = JSON.stringify(obj)
     complaint.value.pubilsherId = user.id
+    if(anonymous){
+        complaint.value.pubilsherId = 0
+    }
     axios.put('pms/form/complaint', complaint.value).then((res)=>{
         if(res.status === 200){
-            console.log(res.data)
+            if(res.data.type === 101){
+                ElMessage.success('发送成功')
+                router.push({name: 'result', query: {state: 'success'}})
+            }else{
+                ElMessage.success('发送失败')
+                router.push({name: 'result', query: {state: 'error'}})
+            }
         }
+    }).finally(()=>{
+        loading.close()
     })
 }
 </script>
 
 <template>
     <div aria-label="A complete example of page header">
-        <el-page-header @back="onBack" style="color: black;">
-            <template #content>
-                <div class="flex items-center" v-if="!anonymous">
-                    <el-avatar
-                    class="mr-3"
-                    :size="50"
-                    :src="src">
-                        <span>{{ user?.username }}</span>
-                    </el-avatar>
-                    <span class="text-large font-600 mr-3"> {{ user?.username }} </span>
-                    <el-tag>业主</el-tag>
-                </div>
-                <div class="flex items-center" v-else>
-                    <el-avatar
-                    class="mr-3"
-                    :size="50">
-                        <span>匿名</span>
-                    </el-avatar>
-                    <span class="text-large font-600 mr-3">匿名</span>
-                </div>
-            </template>
-            
-            <template #extra>
-                <div class="flex items-center">
-                    <el-switch v-model="anonymous" active-text="匿名模式"/>
-                </div>
-            </template>
-        </el-page-header>
-        <el-divider><el-icon><IceCreamRound /></el-icon></el-divider>
+        <pageHeader 
+        :has-anonymous="true" 
+        :src="src" 
+        :anonymous="anonymous" 
+        :user="user!"
+        @is-anonymous="isAnonymous"/>
         <!-- 投诉表单 -->
         <div class="complaint-form">
             <el-form :model="complaint" label-width="120px" label-position="left">

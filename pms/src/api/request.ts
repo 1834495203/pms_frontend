@@ -30,6 +30,9 @@ _axios.interceptors.response.use(
         }else if(error.response.status === 401){
             const info:RestErrorResponse = error.response.data
             ElMessage.error(info.errMessage)
+        }else{
+            const info:RestErrorResponse = error.response.data
+            ElMessage.error(info.errMessage)
         }
         // return Promise.reject(error)
         return Promise.resolve(error)

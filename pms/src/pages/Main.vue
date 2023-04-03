@@ -67,7 +67,7 @@ onBeforeMount(()=>{
                                 <template #title>报事报修</template>
                                 <el-menu-item index="postCom">投诉上报</el-menu-item>
                                 <el-menu-item index="2-1-2">维修上报</el-menu-item>
-                                <el-menu-item index="2-1-3">投诉查询</el-menu-item>
+                                <el-menu-item index="queryCom">投诉查询</el-menu-item>
                                 <el-menu-item index="2-1-4">维修查询</el-menu-item>
                             </el-sub-menu>
                             <el-menu-item index="2-2">公告查询</el-menu-item>
