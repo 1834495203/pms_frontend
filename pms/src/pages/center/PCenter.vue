@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, Ref } from 'vue'
 import axios from '../../api/request'
-import { Proprietor, address } from '../../model/entity'
+import { Proprietor, address, allUser } from '../../model/entity'
 import { ElLoading, ElMessage, UploadProps, UploadFile, UploadFiles } from 'element-plus'
 import userCookie from 'vue-cookies'
 import { IceCreamRound } from '@element-plus/icons-vue'
@@ -10,6 +10,7 @@ const pro = defineProps<{user:Proprietor}>()
 
 const cookie:any = userCookie
 const originalInfo = ref<Proprietor>()
+const all = ref<allUser>()
 const alterInfo = ref<Proprietor>()
 const src = ref()
 
@@ -34,11 +35,14 @@ const getUserInfo = (o:Ref)=>{
         })
         axios.get('pms/auth/info').then((res)=>{
             if(res.status === 200){
+                console.log(res.data)
                 if(res.data.msg === 'success'){
                     o.value = res.data.result
                     if (res.data.result.profile !== null)
                         src.value = `http://api.mahiro.com/file/mediafiles/${res.data.result.profile}`
                     else src.value = ''
+                }else{
+                    ElMessage.error(res.data.msg)
                 }
             }
         }).finally(()=>{
@@ -62,18 +66,19 @@ const uploadError = (error: Error, uploadFile: UploadFile, uploadFiles: UploadFi
 }
 
 const uploadSuccess = (response: any, uploadFile: UploadFile, uploadFiles: UploadFiles)=>{
+    
     if (response.type === 313){
         ElMessage.success('上传成功')
-        getUserInfo(originalInfo)
+        getUserInfo(all)
     }
 }
 
 onMounted(()=>{
     if(pro.user === undefined){
-        getUserInfo(originalInfo)
+        getUserInfo(all)
     }else{
         console.log(pro.user.profile)
-        originalInfo.value = pro.user
+        all.value = pro.user
         src.value = src.value = `http://api.mahiro.com/file/mediafiles/${pro.user.profile}`
     }
     getUserInfo(alterInfo)
@@ -94,7 +99,7 @@ onMounted(()=>{
             :on-success="uploadSuccess"
             :on-error="uploadError">
                 <el-avatar style="font-size: 30px;" :src="src">
-                    {{ originalInfo?.username }}
+                    {{ all?.username }}
                 </el-avatar>
             </el-upload>
             <span style="color: gray; font-size: 10px;">点击头像可修改</span>
@@ -110,31 +115,32 @@ onMounted(()=>{
                 :column="4"
                 size="large"
                 :border="true"
-                v-if="originalInfo !== undefined">
+                v-if="all !== undefined">
                     <el-descriptions-item label="用户名">
-                        {{ originalInfo.username }}
+                        {{ all.username }}
                     </el-descriptions-item>
                     <el-descriptions-item label="姓名">
-                        {{ originalInfo.name === null ? '未填写' : originalInfo.name }}
+                        {{ all.name === null ? '未填写' : all.name }}
                     </el-descriptions-item>
                     <el-descriptions-item label="手机号">
-                        {{ originalInfo.phone === null ? '未填写' : originalInfo.phone }}
+                        {{ all.phone === null ? '未填写' : all.phone }}
                     </el-descriptions-item>
                     <el-descriptions-item label="年龄">
-                        {{ originalInfo.age === null ? '未填写' : originalInfo.age }}
+                        {{ all.age === null ? '未填写' : all.age }}
                     </el-descriptions-item>
                     <el-descriptions-item label="性别">
-                        {{ originalInfo.gender === null ? '未填写' : originalInfo.gender }}
+                        {{ all.gender === null ? '未填写' : all.gender }}
                     </el-descriptions-item>
                     <el-descriptions-item label="住址" :span="3">
-                        {{ originalInfo.address === null ? '未填写' : originalInfo.address }}
+                        {{ all.address === null ? '未填写' : all.address }}
                     </el-descriptions-item>
                     <el-descriptions-item label="身份">
-                        <el-tag class="ml-2" v-if="originalInfo.status === '91090'">房主</el-tag>
-                        <el-tag class="ml-2" v-else-if="originalInfo.status === '91091'">家属成员</el-tag>
+                        <el-tag class="ml-2" v-if="all.status === '91090'">房主</el-tag>
+                        <el-tag class="ml-2" v-else-if="all.status === '91091'">家属成员</el-tag>
+                        <el-tag class="ml-2" v-else-if="all.authority === '90090'" type="danger">超级管理员</el-tag>
                     </el-descriptions-item>
                     <el-descriptions-item label="身份证信息" :span="3">
-                        {{ originalInfo.idCard === null ? '未填写' : originalInfo.idCard }}
+                        {{ all.idCard === null ? '未填写' : all.idCard }}
                     </el-descriptions-item>
                 </el-descriptions>
             </el-tab-pane>
@@ -145,7 +151,7 @@ onMounted(()=>{
             v-if="alterInfo !== undefined">
                 <div class="alter-user-info">
                     <el-form 
-                    :model="originalInfo" 
+                    :model="all" 
                     label-width="120px" 
                     label-position="left"
                     size="large"
@@ -162,17 +168,20 @@ onMounted(()=>{
                             <el-input v-model="alterInfo.name"/>
                         </el-form-item>
                         <el-space fill style="width: 100%;">
-                            <el-alert type="info" show-icon :closable="false">
+                            <el-alert type="info" show-icon :closable="false" v-if="all?.authority === null">
                                 <p>手机号暂时无法修改, 请联系管理员</p>
                             </el-alert>
+                            <el-alert type="info" show-icon :closable="false" v-else>
+                                <p>管理员可修改手机号</p>
+                            </el-alert>
                             <el-form-item label="手机号">
-                                <el-input v-model="alterInfo.phone" disabled/>
+                                <el-input v-model="alterInfo.phone" :disabled="all?.authority === null ? true : false"/>
                             </el-form-item>
                         </el-space>
                         <el-form-item label="年龄">
                             <el-input-number v-model="alterInfo.age" :min="1" :max="100"/>
                         </el-form-item>
-                        <el-form-item label="住址">
+                        <el-form-item label="住址" v-if="all?.authority === null">
                             <el-cascader 
                             v-model="alterInfo.address" 
                             :options="address" 

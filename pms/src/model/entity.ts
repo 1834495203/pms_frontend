@@ -76,9 +76,7 @@ export interface queryComplaintDto{
     pubilsherId: number,
     state?: string,
     title?: string,
-    createTime?: Date,
-    queryTime?:number,
-    createDate?:Date
+    queryTime?:Array<Date>,
 }
 
 //获取投诉信息
@@ -93,7 +91,9 @@ export interface resultComplaintDto{
     profile?: string, 
     solverId?: string,
     title?: string,
-    objectName?: string[]
+    objectName?: string[],
+    username?:string,
+    userProfile?:string
 }
 
 //分页查询结果
@@ -102,6 +102,39 @@ export interface PageResult<T>{
     counts?:number,
     page?:number,
     pageSize?:number
+}
+
+//公告信息
+export interface broadcast{
+    bid?:number,
+    title:string,
+    content?:string,
+    correspond?:string,
+    pubilsherId:number,
+    state?:string,
+    profile?:string,
+    createDate?:Date
+}
+
+//查询公告信息
+export interface QueryBroadcastDto {
+    title?:string,
+    correspond?:string,
+    queryDate?:Date
+}
+
+//获取公告信息
+export interface resultBroadcastDto{
+    bid?: string,
+    pubilsherId?: number,
+    content?: string,
+    state?: string,
+    createDate?: Date,
+    profile?: string, 
+    title?: string,
+    objectName?: string[],
+    correspond?:string,
+    username?:string
 }
 
 
@@ -161,6 +194,21 @@ export const address = [
         value: 'buildingOne',
         label: '四栋',
         children: unit
+    }
+]
+
+export const ComplaintSate = [
+    {
+        value:'40010',
+        label:'已处理',
+    },
+    {
+        value:'40011',
+        label:'未处理',
+    },
+    {
+        value:'40012',
+        label:'处理中',
     }
 ]
 

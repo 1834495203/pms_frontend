@@ -3,11 +3,11 @@ import { ElMessage, ElNotification as notify, UploadInstance, UploadUserFile, Up
 import axios from '../../api/request'
 import { onMounted, ref } from 'vue'
 import { allUser, complaint, pict, userInfo} from '../../model/entity'
-import { Plus } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import useCookie from 'vue-cookies'
 import jwt from 'jwt-decode'
 import pageHeader from '../components/pageHeader.vue'
+import uploadPict from '../components/uploadFile.vue'
  
 //arr存储待写入数据库的图片信息id
 const arr = ref<Map<string, number>>(new Map<string, number>())
@@ -25,6 +25,10 @@ const router = useRouter()
 const user = ref<allUser>()
 const src = ref('')
 const anonymous = ref(false)
+
+const getArr = (ar:Map<string, number>)=>{
+    arr.value = ar
+}
 
 onMounted(()=>{
     axios.get('/pms/auth/info').then((res)=>{
@@ -64,6 +68,7 @@ const pictRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles)=>{
 
 const toSubmit = ()=>{
     //加载动画
+    console.log(arr)
     const loading = ElLoading.service({
     lock: true,
     text: 'Loading',
@@ -114,7 +119,7 @@ const toSubmit = ()=>{
                     :show-word-limit="true"/>
                 </el-form-item>
                 <el-form-item label="图片上传">
-                    <el-upload
+                    <!-- <el-upload
                     action="http://api.mahiro.com/pms/form/upload"
                     ref="uploadRef"
                     list-type="picture-card"
@@ -127,7 +132,8 @@ const toSubmit = ()=>{
                     :on-success="uploadSuccess"
                     :on-remove="pictRemove">
                         <el-icon><Plus /></el-icon>
-                    </el-upload>
+                    </el-upload> -->
+                    <uploadPict @arr="getArr"/>
                 </el-form-item>
                 <el-form-item label="问题描述">
                     <el-input 

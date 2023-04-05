@@ -6,6 +6,7 @@ import { userInfo } from '../model/entity'
 import { useRouter } from 'vue-router'
 import axios from '../api/request'
 import { Proprietor } from '../model/entity'
+import { checkUserAuth } from './func/GeneralFunc'
 
 const proprietor = ref<Proprietor>()
 const router = useRouter()
@@ -79,7 +80,14 @@ onBeforeMount(()=>{
                                 <el-menu-item index="2-4-3">小区商铺</el-menu-item>
                             </el-sub-menu>
                         </el-sub-menu>
-                        <el-menu-item index="3" :disabled="adminAuth">管理员功能</el-menu-item>
+                        <el-sub-menu index="3" :disabled="adminAuth">
+                            <template #title>管理员功能</template>
+                                <el-menu-item index="3-1">楼栋管理</el-menu-item>
+                                <el-menu-item index="broadcast">公告管理</el-menu-item>
+                                <el-menu-item index="complaint">投诉管理</el-menu-item>
+                                <el-menu-item index="3-4">访客管理</el-menu-item>
+                                <el-menu-item index="3-5">维修管理</el-menu-item>
+                        </el-sub-menu>
                         <el-menu-item index="4">更多</el-menu-item>
                     </el-menu>
                 </div>

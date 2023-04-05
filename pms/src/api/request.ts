@@ -10,7 +10,7 @@ const _axios = axios.create({
     baseURL: 'http://api.mahiro.com/',
     headers: {
         'TOKEN': cookie.get('user')
-    }
+    },
 })
 
 //响应拦截器

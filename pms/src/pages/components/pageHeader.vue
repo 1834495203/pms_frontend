@@ -34,7 +34,8 @@ const onBack = async () => {
                     <span>{{ prop.user?.username }}</span>
                 </el-avatar>
                 <span class="text-large font-600 mr-3"> {{ user?.username }} </span>
-                <el-tag>业主</el-tag>
+                <el-tag v-if="prop.user?.status === '91090'">业主</el-tag>
+                <el-tag v-else-if="prop.user?.authority === '90090'" type="danger">管理员</el-tag>
             </div>
             <div class="flex items-center" v-else>
                 <el-avatar
@@ -56,4 +57,10 @@ const onBack = async () => {
 </template>
 
 <style>
+.items-center {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 200px;
+}
 </style>

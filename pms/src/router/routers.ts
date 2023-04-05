@@ -1,7 +1,7 @@
 import {createRouter, createWebHashHistory} from 'vue-router'
 import useCookie from 'vue-cookies'
 import jwt from 'jwt-decode'
-import { userInfo } from '../model/entity'
+import { allUser, userInfo } from '../model/entity'
 import { ElMessage } from 'element-plus'
 
 const routes = [
@@ -40,6 +40,22 @@ const routes = [
                 name:'queryCom',
                 path:'queryCom',
                 component:()=>import('../pages/complaint/QueryComplaint.vue'),
+            },
+            {
+                name:'auth',
+                path:'auth/',
+                children:[
+                    {
+                        name:'broadcast',
+                        path:'broadcast',
+                        component:()=>import('../pages/broadcast/ManageBroadcast.vue'),
+                    },
+                    {
+                        name:'complaint',
+                        path:'complaint',
+                        component:()=>import('../pages/complaint/QueryComplaint.vue'),
+                    },
+                ]
             },
         ]
     }
