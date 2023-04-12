@@ -68,7 +68,6 @@ const toTest = (val:number)=>{
     axios.post(`/pms/form/complaint/query/${val}`, query.value).then((res)=>{
         if(res.status === 200){
             complaintPage.value = res.data
-            console.log(complaintPage.value)
         }
     }).finally(()=>{
         isLoading.value = false
@@ -76,7 +75,13 @@ const toTest = (val:number)=>{
 }
 
 const toChange = (val:number)=>{
+    currentPage.value = val
     toTest(val)
+}
+
+const toGetFilter = (val:string)=>{
+    query.value.state = val
+    toTest(currentPage.value)
 }
 </script>
 
@@ -122,7 +127,12 @@ const toChange = (val:number)=>{
         <el-divider><el-icon><IceCreamRound /></el-icon></el-divider>
 
         <div class="content">
-            <ComplaintDisplay :result="complaintPage" :loading="isLoading" :auth="(jwt(cookie.get('user')) as userInfo).auth"/>
+            <ComplaintDisplay 
+            :result="complaintPage" 
+            :loading="isLoading" 
+            :auth="(jwt(cookie.get('user')) as userInfo).auth"
+            :current-user-id="(jwt(cookie.get('user')) as userInfo).id"
+            @filter="toGetFilter"/>
         </div>
         <el-pagination 
         v-if="complaintPage !== undefined && complaintPage !== null"

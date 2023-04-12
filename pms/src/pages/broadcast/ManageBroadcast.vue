@@ -67,6 +67,7 @@ const pictRemove = (uploadFile: UploadFile, uploadFiles: UploadFiles)=>{
 
 const toSubmit = ()=>{
     //加载动画
+    isLoading.value = true
     const loading = ElLoading.service({
     lock: true,
     text: 'Loading',
@@ -94,6 +95,7 @@ const toSubmit = ()=>{
             }
         }
     }).finally(()=>{
+        isLoading.value = false
         loading.close()
     })
 }

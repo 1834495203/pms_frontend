@@ -6,7 +6,6 @@ import { userInfo } from '../model/entity'
 import { useRouter } from 'vue-router'
 import axios from '../api/request'
 import { Proprietor } from '../model/entity'
-import { checkUserAuth } from './func/GeneralFunc'
 
 const proprietor = ref<Proprietor>()
 const router = useRouter()
@@ -64,29 +63,25 @@ onBeforeMount(()=>{
                         <el-menu-item index="center">个人中心</el-menu-item>
                         <el-sub-menu index="2" :disabled="proprietorAuth">
                             <template #title>业主功能</template>
-                            <el-sub-menu index="2-1">
-                                <template #title>报事报修</template>
-                                <el-menu-item index="postCom">投诉上报</el-menu-item>
-                                <el-menu-item index="2-1-2">维修上报</el-menu-item>
-                                <el-menu-item index="queryCom">投诉查询</el-menu-item>
-                                <el-menu-item index="2-1-4">维修查询</el-menu-item>
-                            </el-sub-menu>
-                            <el-menu-item index="2-2">公告查询</el-menu-item>
-                            <el-menu-item index="2-3">访客查看</el-menu-item>
-                            <el-sub-menu index="2-4">
-                                <template #title>设施查询</template>
-                                <el-menu-item index="2-4-1">娱乐设施</el-menu-item>
-                                <el-menu-item index="2-4-2">基础设施</el-menu-item>
-                                <el-menu-item index="2-4-3">小区商铺</el-menu-item>
-                            </el-sub-menu>
+                            <el-menu-item index="postCom">投诉上报</el-menu-item>
+                            <el-menu-item index="2-2">维修上报</el-menu-item>
+                            <el-menu-item index="queryCom">投诉查询</el-menu-item>
+                            <el-menu-item index="2-4">维修查询</el-menu-item>
+                            <el-menu-item index="broadcastForProp">公告查看</el-menu-item>
+                            <el-menu-item index="2-6">访客查询</el-menu-item>
+                            <el-menu-item index="2-7">设施查询</el-menu-item>
+                            <el-menu-item index="2-8">缴费服务</el-menu-item>
                         </el-sub-menu>
                         <el-sub-menu index="3" :disabled="adminAuth">
                             <template #title>管理员功能</template>
-                                <el-menu-item index="3-1">楼栋管理</el-menu-item>
+                                <el-menu-item index="building">楼栋管理</el-menu-item>
                                 <el-menu-item index="broadcast">公告管理</el-menu-item>
                                 <el-menu-item index="complaint">投诉管理</el-menu-item>
                                 <el-menu-item index="3-4">访客管理</el-menu-item>
                                 <el-menu-item index="3-5">维修管理</el-menu-item>
+                                <el-menu-item index="personnel">人员管理</el-menu-item>
+                                <el-menu-item index="3-7">设施管理</el-menu-item>
+                                <el-menu-item index="3-8">缴费管理</el-menu-item>
                         </el-sub-menu>
                         <el-menu-item index="4">更多</el-menu-item>
                     </el-menu>

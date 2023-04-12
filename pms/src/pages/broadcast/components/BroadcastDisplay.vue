@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { PageResult, complaint, resultBroadcastDto } from '../../../model/entity'
+import { PageResult, complaint, resultBroadcastDto, userInfo } from '../../../model/entity'
 import { Picture  } from '@element-plus/icons-vue'
 
-const prop = defineProps<{result?:PageResult<resultBroadcastDto>, loading?:boolean}>()
+const prop = defineProps<{
+    result?:PageResult<resultBroadcastDto>, 
+    loading?:boolean,
+    currentUser?:userInfo
+    }>()
 
 const filterTag = (value: string, row: complaint) => {
     return row.state === value
@@ -19,7 +23,7 @@ const handleDelete = (index: number, row: resultBroadcastDto) => {
         <el-table 
         ref="tableRef" 
         :data="prop.result?.items" 
-        v-loading="loading">
+        v-loading="prop.loading">
 
             <el-table-column type="expand">
                 <template #default="props">
@@ -93,7 +97,7 @@ const handleDelete = (index: number, row: resultBroadcastDto) => {
                 </template>
             </el-table-column>
 
-            <el-table-column label="操作">
+            <el-table-column label="操作" v-if="prop.currentUser?.auth.includes('900')">
                 <template #default="scope">
                     <el-button
                     size="small"

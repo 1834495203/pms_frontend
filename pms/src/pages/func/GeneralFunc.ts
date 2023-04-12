@@ -4,6 +4,7 @@ import useCookie from 'vue-cookies'
 import { ElMessage } from 'element-plus'
 import { Router } from 'vue-router'
 
+//是否有管理员权限
 export const checkUserAuth = (router:Router)=>{
     const cookie:any = useCookie
     const currentUser:userInfo = jwt(cookie.get('user'))
@@ -11,4 +12,11 @@ export const checkUserAuth = (router:Router)=>{
         ElMessage.warning('权限不足！')
         router.back()
     }
+}
+
+//获取当前登录用户的信息
+export const getCurrentUserInfo = ():userInfo=>{
+    const cookie:any = useCookie
+    const currentUser:userInfo = jwt(cookie.get('user'))
+    return currentUser
 }

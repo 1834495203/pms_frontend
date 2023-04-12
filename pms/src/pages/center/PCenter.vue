@@ -90,7 +90,7 @@ onMounted(()=>{
         <div class="avatar">
             <el-upload
             class="avatar-uploader"
-            action="http://api.mahiro.com/pms/person/upload"
+            action="http://api.mahiro.com/pms/auth/upload"
             :show-file-list="false"
             :before-upload="beforeAvatarUpload"
             name="file"
@@ -168,14 +168,14 @@ onMounted(()=>{
                             <el-input v-model="alterInfo.name"/>
                         </el-form-item>
                         <el-space fill style="width: 100%;">
-                            <el-alert type="info" show-icon :closable="false" v-if="all?.authority === null">
+                            <el-alert type="info" show-icon :closable="false" v-if="all?.authority === undefined">
                                 <p>手机号暂时无法修改, 请联系管理员</p>
                             </el-alert>
                             <el-alert type="info" show-icon :closable="false" v-else>
                                 <p>管理员可修改手机号</p>
                             </el-alert>
                             <el-form-item label="手机号">
-                                <el-input v-model="alterInfo.phone" :disabled="all?.authority === null ? true : false"/>
+                                <el-input v-model="alterInfo.phone" :disabled="all?.authority === undefined ? true : false"/>
                             </el-form-item>
                         </el-space>
                         <el-form-item label="年龄">

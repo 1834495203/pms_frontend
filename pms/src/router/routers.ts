@@ -42,6 +42,11 @@ const routes = [
                 component:()=>import('../pages/complaint/QueryComplaint.vue'),
             },
             {
+                name:'broadcastForProp',
+                path:'broadcast',
+                component:()=>import('../pages/broadcast/ShowBroadcast.vue'),
+            },
+            {
                 name:'auth',
                 path:'auth/',
                 children:[
@@ -54,6 +59,16 @@ const routes = [
                         name:'complaint',
                         path:'complaint',
                         component:()=>import('../pages/complaint/QueryComplaint.vue'),
+                    },
+                    {
+                        name:'building',
+                        path:'building',
+                        component:()=>import('../pages/building/ManageBuilding.vue'),
+                    },
+                    {
+                        name:'personnel',
+                        path:'personnel',
+                        component:()=>import('../pages/personnel/ManagePersonnel.vue'),
                     },
                 ]
             },

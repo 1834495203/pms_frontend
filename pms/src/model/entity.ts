@@ -12,6 +12,14 @@ export interface userInfo{
     sub: string
 }
 
+//用户基本信息
+export interface resultUserBaseInfo{
+    username?:string,
+    profile?:string,
+    authority?:string,
+    status?:string
+}
+
 //业主信息
 export interface Proprietor {
     username: string,
@@ -46,6 +54,12 @@ export interface allUser {
     createDate?: string,
     authority?:string,
     hiredate?:string,
+}
+
+//查询用户的信息
+export interface QueryPersonnel {
+    username?:string,
+    name?:string
 }
 
 //投诉信息
@@ -89,11 +103,15 @@ export interface resultComplaintDto{
     process?: string,
     profiles?: string, 
     profile?: string, 
-    solverId?: string,
+    solverId?: number,
     title?: string,
     objectName?: string[],
     username?:string,
-    userProfile?:string
+    userProfile?:string,
+    resultUserBaseInfo?: resultUserBaseInfo,
+    processDate?:Date,
+    rate?:number,
+    opinion?:string,
 }
 
 //分页查询结果
@@ -135,6 +153,23 @@ export interface resultBroadcastDto{
     objectName?: string[],
     correspond?:string,
     username?:string
+}
+
+//小区楼栋信息
+export interface ResultHouseDto {
+    hid?:number,
+    lastId?:number
+    label?:string,
+    value?:string,
+    children?:ResultHouseDto[]
+}
+
+export interface information {
+    iid?:number,
+    area?:number,
+    hid?:number,
+    state?:string,
+    pid?:number
 }
 
 
