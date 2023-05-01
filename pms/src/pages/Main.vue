@@ -81,7 +81,7 @@ onBeforeMount(()=>{
                                 <el-menu-item index="3-5">维修管理</el-menu-item>
                                 <el-menu-item index="personnel">人员管理</el-menu-item>
                                 <el-menu-item index="3-7">设施管理</el-menu-item>
-                                <el-menu-item index="3-8">缴费管理</el-menu-item>
+                                <el-menu-item index="cost">缴费管理</el-menu-item>
                         </el-sub-menu>
                         <el-menu-item index="4">更多</el-menu-item>
                     </el-menu>

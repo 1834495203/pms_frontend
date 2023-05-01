@@ -2,15 +2,27 @@
 import { ref, watch } from 'vue'
 import axios from '../../../api/request'
 import { allUser, PageResult, QueryPersonnel } from '../../../model/entity'
+import { ElMessage } from 'element-plus'
 
 const page = ref<PageResult<allUser>>()
-const prop = defineProps<{query:QueryPersonnel, currentPage:number}>()
-const emits = defineEmits(['getPageResult'])
+const prop = defineProps<{query:QueryPersonnel, currentPage:number, filterChanged?:string}>()
+const emits = defineEmits(['getPageResult', 'loadingState'])
 const isLike = ref(true)
 const isLoading = ref(false)
 
 watch(()=>prop.currentPage, ()=>{
     toTest(prop.currentPage)
+})
+
+watch(()=>prop.filterChanged, ()=>{
+    if(prop.filterChanged !== undefined && prop.filterChanged !== null)
+        prop.query.propertyExpenseState = Number.parseInt(prop.filterChanged)
+    else prop.query.propertyExpenseState = NaN
+    toTest(prop.currentPage)
+})
+
+watch(()=>isLoading, ()=>{
+    emits('loadingState', isLoading.value)
 })
 
 watch(()=>page.value, ()=>{
@@ -23,7 +35,10 @@ const toTest = (val:number)=>{
         if(res.status === 200) {
             page.value = res.data
         }
-    }).finally(()=>{
+    }).catch((config)=>{
+        ElMessage.error(config.response.data.errMessage)
+    })
+    .finally(()=>{
         isLoading.value = false
     })
 }

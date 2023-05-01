@@ -22,19 +22,22 @@ export interface resultUserBaseInfo{
 
 //业主信息
 export interface Proprietor {
-    username: string,
-    password: string,
-    chackPass: string,
-    name: string,
+    pid?:number,
+    username?: string,
+    password?: string,
+    chackPass?: string,
+    name?: string,
     phone?: string,
     birth?: Date,
     age?:number,
-    address: string,
-    status: string,
-    check_in_date?: string,
+    address?: string,
+    status?: string,
+    checkInDate?: string,
     idCard?: string,
-    gender: string,
-    profile?:string
+    gender?: string,
+    profile?:string,
+    propertyExpenseState:number,
+    addressList?:number[]
 }
 
 //用户的总信息
@@ -54,12 +57,14 @@ export interface allUser {
     createDate?: string,
     authority?:string,
     hiredate?:string,
+    addressList?:number[]
 }
 
 //查询用户的信息
 export interface QueryPersonnel {
     username?:string,
-    name?:string
+    name?:string,
+    propertyExpenseState?:number
 }
 
 //投诉信息
@@ -161,9 +166,11 @@ export interface ResultHouseDto {
     lastId?:number
     label?:string,
     value?:string,
+    toDisLabel?:string,
     children?:ResultHouseDto[]
 }
 
+//房产信息
 export interface information {
     iid?:number,
     area?:number,
@@ -172,6 +179,12 @@ export interface information {
     pid?:number
 }
 
+//缴费信息
+export interface expenseInfo{
+    date?: Date,
+    price?: number,
+    addition?: string
+}
 
 const floor = [
     {value: 'Floor1',label: '一楼'},

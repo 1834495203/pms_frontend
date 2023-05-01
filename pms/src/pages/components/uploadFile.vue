@@ -6,6 +6,7 @@ import { pict } from '../../model/entity'
 import { Plus } from '@element-plus/icons-vue'
 import useCookie from 'vue-cookies'
 
+const prop = defineProps<{type:string}>()
 const toU = defineEmits(['arr'])
 const arr = ref<Map<string, number>>(new Map<string, number>())
 const pict = ref<pict>()
@@ -13,6 +14,7 @@ const uploadRef = ref<UploadInstance>()
 const cookie:any = useCookie
 const headers: Record<string, any> = {
     'TOKEN': cookie.get('user'),
+    'type': prop.type,
 }
 
 watch(()=>arr.value, ()=>{

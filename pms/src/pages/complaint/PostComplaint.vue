@@ -133,7 +133,9 @@ const toSubmit = ()=>{
                     :on-remove="pictRemove">
                         <el-icon><Plus /></el-icon>
                     </el-upload> -->
-                    <uploadPict @arr="getArr"/>
+                    <uploadPict 
+                    @arr="getArr"
+                    type="400"/>
                 </el-form-item>
                 <el-form-item label="问题描述">
                     <el-input 

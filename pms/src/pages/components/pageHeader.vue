@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { allUser } from '../../model/entity'
+import { allUser, resultUserBaseInfo } from '../../model/entity'
 import { ElNotification as notify } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { ref, watch, onMounted } from 'vue'
@@ -7,7 +7,10 @@ import { IceCreamRound } from '@element-plus/icons-vue'
 import axios from '../../api/request'
 
 const prop = defineProps<{
-    user?:allUser, anonymous?:boolean, src?:string, hasAnonymous:boolean
+    user?:any, 
+    anonymous?:boolean, 
+    src?:string, 
+    hasAnonymous:boolean
 }>()
 const router = useRouter()
 const isAnonymous = ref(prop.anonymous)
@@ -45,7 +48,7 @@ onMounted(()=>{
                 <el-avatar
                 class="mr-3"
                 :size="50"
-                :src="prop.src === undefined ? src : prop.src">
+                :src="src !== undefined ? src : 'http://api.mahiro.com/file/mediafiles/'+prop.src">
                     <span>{{ prop.user === undefined ? user?.username : prop.user.username }}</span>
                 </el-avatar>
                 <span class="text-large font-600 mr-3"> {{ prop.user === undefined ? user?.username : prop.user.username }} </span>

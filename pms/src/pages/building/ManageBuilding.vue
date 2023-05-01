@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { ResultHouseDto, information } from '../../model/entity'
+import { ResultHouseDto, information, resultUserBaseInfo } from '../../model/entity'
 import axios from 'axios'
 import pageHeader from '../components/pageHeader.vue'
 import { ElMessage, ElTree } from 'element-plus'
@@ -9,7 +9,10 @@ import { toNumber } from 'lodash'
 import { checkUserAuth } from '../func/GeneralFunc'
 import { useRouter } from 'vue-router'
 import useCookie from 'vue-cookies'
+import PageHeader from '../components/pageHeader.vue'
 
+const currentUserBaseInfo = ref<resultUserBaseInfo>({})
+const currentHouseInfo = ref<information>({})
 const isDelete = ref(false)
 const alterHouseInfo = ref(false)
 const bindPropInfo = ref(false)
@@ -21,7 +24,8 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
 const defaultExpand = ref([1])
 const id = ref()
 const header = {
-    'TOKEN': cookie.get('user')
+    'TOKEN': cookie.get('user'),
+    'type': 'all'
 }
 
 watch(()=>filterText.value, (val)=>{
@@ -139,17 +143,23 @@ const remove = (node:Node, data:ResultHouseDto)=>{
     dataSource.value = [...dataSource.value]
 }
 
-//将楼栋信息与业主绑定
-const toBind = ()=>{
-    bindPropInfo.value = true
-}
-
 //查看楼栋信息
 const toQuery = (data:ResultHouseDto)=>{
     axios.get(`/pms/form/building/info/${data.hid}`).then((res)=>{
         if(res.status === 200){
             if(res.data.type === 603){
                 //查询成功
+                currentHouseInfo.value = res.data.result
+                if(currentHouseInfo.value !== null)
+                axios.get(`/pms/auth/info/prop/${currentHouseInfo.value.pid}`).then((res)=>{
+                    if(res.status === 200){
+                        currentUserBaseInfo.value = res.data
+                        ElMessage.success('查询成功')
+                    }
+                })
+                else{
+                    ElMessage.warning('暂无业主绑定信息')
+                }
             }
         }
     })
@@ -200,8 +210,7 @@ onMounted(()=>{
                         type="success"
                         v-if="node.level !== 4"> 添加 </el-link>
                         <div v-else-if="node.level === 4" style="display: inline;">
-                            <el-link type="success" @click="toBind"> 绑定 </el-link>
-                            <el-link type="warning" style="margin-left: 8px" @click="toQuery(data)"> 查看 </el-link>
+                            <el-link type="warning" style="margin-left: 8px" @click="toQuery(data)"> 编辑 </el-link>
                         </div>
                         <el-link style="margin-left: 8px" type="danger" @click="isDelete = true"> 删除 </el-link>
 
@@ -223,12 +232,25 @@ onMounted(()=>{
             </template>
         </el-tree>
 
-        <el-dialog v-model="bindPropInfo" title="业主信息绑定">
-
-        </el-dialog>
-
-        <el-dialog v-model="alterHouseInfo" title="房屋信息查看">
-            
+        <el-dialog v-model="alterHouseInfo" title="房屋信息查看" :draggable="true">
+            <div v-if="currentHouseInfo !== null">
+                <PageHeader 
+                :has-anonymous="false" 
+                :user="currentUserBaseInfo"
+                :src="currentUserBaseInfo.profile"/>
+                <el-form :model="currentHouseInfo">
+                    <el-form-item label="面积">
+                        <el-input v-model="currentHouseInfo.area"/>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        <el-radio-group v-model="currentHouseInfo.state">
+                            <el-radio label="60010">闲置</el-radio>
+                            <el-radio label="60011">入住</el-radio>
+                            <el-radio label="60012">装修</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-form>
+            </div>
         </el-dialog>
     </div>
 </template>

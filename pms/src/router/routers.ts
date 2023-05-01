@@ -70,6 +70,11 @@ const routes = [
                         path:'personnel',
                         component:()=>import('../pages/personnel/ManagePersonnel.vue'),
                     },
+                    {
+                        name:'cost',
+                        path:'cost',
+                        component:()=>import('../pages/expense/Expense.vue'),
+                    },
                 ]
             },
         ]
